@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DrawCards : MonoBehaviour
+{
+    public GameObject Card1; // Player card prefab
+    public GameObject Card2; // Enemy card prefab
+    public GameObject PlayerArea1; // Player area
+    public GameObject EnemyArea1; // Enemy area
+
+    public float cardSpacing = 0.3f; // Card spacing
+
+    List<GameObject> Cards = new List<GameObject>();
+    private bool cardsDealt = false; // Flag indicating if cards have been dealt
+
+    void Start()
+    {
+        Cards.Add(Card1);
+        Cards.Add(Card2);
+    }
+
+    public void OnClick()
+    {
+        if (!cardsDealt)
+        {
+            int totalPlayerCards = 3; // Total player cards
+            int totalEnemyCards = 3;  // Total enemy cards
+            float middleCardX = 0f; // X coordinate of the central card
+
+            // Calculate starting position for player cards
+            float startPlayerX = middleCardX - ((totalPlayerCards - 1) * cardSpacing) / 2;
+            // Calculate starting position for enemy cards
+            float startEnemyX = middleCardX - ((totalEnemyCards - 1) * cardSpacing) / 2;
+
+            for (int i = 0; i < totalPlayerCards; i++)
+            {
+                // Calculate position for the current player card
+                float playerCardX = startPlayerX + i * cardSpacing;
+                Vector3 playerCardPosition = new Vector3(playerCardX, 0f, 0f);
+
+                // Instantiate player card prefab and set its position and rotation
+                GameObject playerCard = Instantiate(Cards[Random.Range(0, Cards.Count)], playerCardPosition, Quaternion.identity);
+
+                // Set the parent of the player card to the player area
+                playerCard.transform.SetParent(PlayerArea1.transform, false);
+            }
+
+            for (int i = 0; i < totalEnemyCards; i++)
+            {
+                // Calculate position for the current enemy card
+                float enemyCardX = startEnemyX + i * cardSpacing;
+                Vector3 enemyCardPosition = new Vector3(enemyCardX, 0f, 0f);
+
+                // Instantiate enemy card prefab and set its position and rotation
+                GameObject enemyCard = Instantiate(Cards[Random.Range(0, Cards.Count)], enemyCardPosition, Quaternion.identity);
+
+                // Set the parent of the enemy card to the enemy area
+                enemyCard.transform.SetParent(EnemyArea1.transform, false);
+            }
+
+            cardsDealt = true; // Set as cards have been dealt
+        }
+    }
+}

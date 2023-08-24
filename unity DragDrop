@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems; // Add this namespace
+
+public class DragDrop : MonoBehaviour
+{
+    private bool isDragging = false;
+    private bool isOverDropZone = false;
+    private GameObject dropZone;
+
+    private Vector2 startPosition;
+    private Vector2 offset;
+
+    void Update()
+    {
+        // Check if clicking over a UI element
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // Do not execute dragging logic
+        }
+
+        if (isDragging)
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = mousePosition + offset;
+        }
+    }
+
+    public void StartDrag()
+    {
+        if (!isDragging)
+        {
+            isDragging = true;
+            startPosition = transform.position;
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            offset = (Vector2)transform.position - mousePosition;
+        }
+    }
+
+    public void EndDrag()
+    {
+        if (isDragging)
+        {
+            isDragging = false;
+            // Return the card to its initial position
+            transform.position = startPosition;
+        }
+
+        if (isOverDropZone)
+        {
+            transform.SetParent(dropZone.transform, false);
+        }
+        else
+        {
+            transform.position = startPosition;
+        }
+    }
+}

@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class DragDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    public GameObject Canvas; // 用于存储主 Canvas 的引用
+    private bool isDragging = false; // 是否正在拖拽
+    private bool isOverDropZone = false; // 是否在放置区域上方
+    private GameObject dropZone; // 放置区域的引用
+    private Transform startParent; // 开始拖拽时的父对象
+    private Vector2 startPosition; // 开始拖拽时的位置
+    private Vector2 offset; // 鼠标和物体位置的偏移量
+
+    private void Awake()
+    {
+        Canvas = GameObject.Find("Main Canvas"); // 查找并存储主 Canvas 的引用
+    }
+
+    void Update()
+    {
+        // 检测是否点击在UI元素上
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // 如果点击在 UI 元素上，不执行拖动逻辑
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!isDragging)
+        {
+            isDragging = true; // 设置拖拽状态为 true
+            startParent = transform.parent; // 存储开始拖拽时的父对象
+            startPosition = transform.position; // 存储开始拖拽时的位置
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            offset = (Vector2)transform.position - mousePosition; // 计算鼠标和物体位置的偏移量
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (isDragging)
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = mousePosition + offset; // 根据鼠标位置和偏移量更新物体位置
+            transform.SetParent(Canvas.transform, true); // 将物体放置在 Canvas 下，以确保显示在其他 UI 元素之上
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        isDragging = false; // 设置拖拽状态为 false
+
+        if (isOverDropZone)
+        {
+            transform.SetParent(dropZone.transform, false); // 将物体放置在放置区域内
+        }
+        else
+        {
+            transform.position = startPosition; // 将物体放回开始拖拽时的位置
+            transform.SetParent(startParent, false); // 将物体放回开始拖拽时的父对象
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isOverDropZone = true; // 进入放置区域
+        dropZone = collision.gameObject; // 存储放置区域的引用
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isOverDropZone = false; // 离开放置区域
+        dropZone = null; // 清空放置区域的引用
+    }
+}

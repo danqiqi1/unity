@@ -25,6 +25,8 @@ public class CardZoom : MonoBehaviour
         
         // 将新实例设置为当前对象的子对象，并保持缩放不变
         ZoomCard.transform.SetParent(transform, false);
+        RectTransform rect = ZoomCard.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(0.3f, 2.4f);
     }
 
     // 当鼠标离开对象时调用

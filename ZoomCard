@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CardZoom : MonoBehaviour
+{
+    // 引用用于创建放大卡片的画布
+    public GameObject Canvas;
+
+    // 用于存储生成的放大卡片的实例
+    private GameObject ZoomCard;
+
+    // 在对象被初始化时调用
+    public void Awake()
+    {
+        // 查找名为 "Main Canvas" 的游戏对象并赋值给 Canvas 变量
+        Canvas = GameObject.Find("Main Canvas");
+    }
+
+    // 当鼠标悬停在对象上时调用
+    public void OnHoverEnter()
+    {
+        // 创建一个与当前对象相同的实例，位置位于鼠标位置
+        ZoomCard = Instantiate(gameObject, new Vector2(Input.mousePosition.x, Input.mousePosition.y), Quaternion.identity);
+        
+        // 将新实例设置为当前对象的子对象，并保持缩放不变
+        ZoomCard.transform.SetParent(transform, false);
+    }
+
+    // 当鼠标离开对象时调用
+    public void OnHoverExit()
+    {
+        // 销毁放大卡片的实例，以便不再显示
+        Destroy(ZoomCard);
+    }
+}

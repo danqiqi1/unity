@@ -4,35 +4,41 @@ using UnityEngine;
 
 public class CardZoom : MonoBehaviour
 {
-    // 引用用于创建放大卡片的画布
-    public GameObject Canvas;
+    public GameObject Canvas;  // 对主画布 GameObject 的引用
 
-    // 用于存储生成的放大卡片的实例
-    private GameObject ZoomCard;
+    private GameObject ZoomCard;  // 实例化的放大卡牌 GameObject
 
-    // 在对象被初始化时调用
     public void Awake()
     {
-        // 查找名为 "Main Canvas" 的游戏对象并赋值给 Canvas 变量
+        // 当脚本被唤醒时，查找并存储对 "Main Canvas" GameObject 的引用
         Canvas = GameObject.Find("Main Canvas");
     }
 
-    // 当鼠标悬停在对象上时调用
     public void OnHoverEnter()
     {
-        // 创建一个与当前对象相同的实例，位置位于鼠标位置
-        ZoomCard = Instantiate(gameObject, new Vector2(Input.mousePosition.x, Input.mousePosition.y), Quaternion.identity);
-        
-        // 将新实例设置为当前对象的子对象，并保持缩放不变
+        // 当鼠标光标悬停在卡牌上时调用
+
+        // 在鼠标光标稍微上方的位置实例化当前卡牌的新实例
+        ZoomCard = Instantiate(gameObject, new Vector2(Input.mousePosition.x, Input.mousePosition.y + 250), Quaternion.identity);
+
+        // 将放大的卡牌的父级设置为此卡牌在层次结构中的变换
         ZoomCard.transform.SetParent(transform, false);
+
+        // 将放大的卡牌的层设置为名为 "Zoom" 的指定层
+        ZoomCard.layer = LayerMask.NameToLayer("Zoom");
+
+        // 获取放大的卡牌的 RectTransform 组件
         RectTransform rect = ZoomCard.GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(0.3f, 2.4f);
+
+        // 使用 sizeDelta 调整放大的卡牌的尺寸，其中包括宽度和高度的偏移量
+        rect.sizeDelta = new Vector2(0.3f, 2.4f);  // 根据设计可能需要进行调整
     }
 
-    // 当鼠标离开对象时调用
     public void OnHoverExit()
     {
-        // 销毁放大卡片的实例，以便不再显示
+        // 当鼠标光标停止悬停在卡牌上时调用
+
+        // 销毁放大的卡牌 GameObject 以取消放大效果
         Destroy(ZoomCard);
     }
 }

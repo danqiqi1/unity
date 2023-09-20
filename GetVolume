@@ -1,0 +1,43 @@
+import java.util.Scanner;
+
+public class GetVolume {
+    public static void main(String[] args) {
+        Box b = new Box();
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("请输入该盒子的长、宽、高:");
+        float lengthInput = sc.nextFloat();
+        float widthInput = sc.nextFloat();
+        float heightInput = sc.nextFloat();
+
+        b.setLength(lengthInput);
+        b.setWidth(widthInput);
+        b.setHeight(heightInput);
+        
+        System.out.println("这个盒子的体积为: " + b.computeVolume());
+
+        sc.close();
+    }
+}
+
+class Box {
+    private float height;
+    private float width;
+    private float length;
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public void setLength(float length) {
+        this.length = length;
+    }
+
+    public float computeVolume() {
+        return height * width * length;
+    }
+}

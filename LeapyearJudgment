@@ -1,0 +1,32 @@
+import java.util.Scanner;
+
+public class LeapyearJudgment {
+    public static void main(String[] args) {
+        Year yearObj = new Year();  // 创建Year对象
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入年份:");
+        int yearInput = sc.nextInt();
+        yearObj.setYear(yearInput); // 设置年份值
+
+        // 判断是否是闰年
+        if ((yearObj.getYear() % 4 == 0 && yearObj.getYear() % 100 != 0) || yearObj.getYear() % 400 == 0) {
+            System.out.println(yearInput + " 是闰年。");
+        } else {
+            System.out.println(yearInput + " 是平年。");
+        }
+    }
+}
+
+class Year {
+    private int year;  // 存储年份的私有变量
+
+    // 设置年份的方法
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    // 获取年份的方法
+    public int getYear() {
+        return this.year;
+    }
+}

@@ -1,0 +1,38 @@
+import java.util.Scanner;
+
+public class Narcissusnumberjudger {
+    public static void main(String[] args) {
+        Number numberObj = new Number();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入想要输入的数字（小于等于999）：");
+        int numberInput = sc.nextInt();
+        numberObj.setNumber(numberInput);
+
+        // 判断所提供的数字是否是水仙花数
+        if (numberObj.getNumber() > 999) {
+            System.out.println("输入的数据过大无法对其进行判断！");
+        } else {
+            int n = numberObj.getNumber();
+            int bai = n / 100;
+            int shi = (n % 100) / 10;
+            int ge = n % 10;
+            if (n == Math.pow(bai, 3) + Math.pow(shi, 3) + Math.pow(ge, 3)) {
+                System.out.println(n + " 是一个水仙花数。");
+            } else {
+                System.out.println(n + " 不是一个水仙花数。");
+            }
+        }
+    }
+}
+
+class Number {
+    private int number;
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return this.number;
+    }
+}

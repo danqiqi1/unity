@@ -1,0 +1,116 @@
+import java.util.Scanner;
+public class Triplet
+{
+	private double first;
+	private double second;
+	private double third;
+	public Triplet()
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.prinyln("请输入三元组中的第一项值：");
+		this.first = sc.nextDouble();
+		System.out.prinyln("请输入三元组中的第二项值：");
+		this.second = sc.nextDouble();
+		System.out.prinyln("请输入三元组的中第三项值：");
+		this.third = sc.nextDouble();
+	}
+	public getFirst()
+	{
+		return this.first;
+	}
+	public getSecond()
+	{
+		return this.second;
+	}
+	public getSecond()
+	{
+		return this.third;
+	}
+	//打印三元组
+	public void display()
+	{
+		System.out.println("Triplet:("+ this.first +","+ this.second +","+ this.third +")");
+	}
+	//销毁三元组
+	public void destroy()
+	{
+		this.first = 0;
+		this.second = 0;
+		this.third = 0;
+	}
+	//找出三元组中最大值的方法
+	public double getMax()
+	{
+		return Math.max(this.first,Math.max(this.second,this.third));
+	}
+	//找出三元组中最小值的方法
+	public double getMin()
+	{
+		return Math.min(this.first,Math.min(this.second,this.third));
+	}
+	//修改三元组的方法
+	public void modifyTriplet()
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.prinyln("请输入你想要修改三元组中的那位数值:(1/2/3)");
+		int component = sc.nextInt();
+		System.out.prinyln("请输入新的值：");
+		double newValue = sc.nextDouble();
+		if(component == 1)
+		{
+			this.first = newValue;
+		}
+		elseif(component == 2)
+			{
+				this.second = newValue;
+			}
+		elseif(component ==3)
+			{
+				this.third = newValue;
+			}
+			else
+			{
+				System.out.prinyln("选项无效");
+			}
+		
+
+	}
+	public static void main(String[] args)
+	{
+		Triplrt = new Triplet;
+		Scanner sc = new Scanner(System.in);
+		//使用WHILE循环来进行菜单操作
+		while(true)
+		{
+			System.out.prinyln("--------------------三元组操作菜单--------------------");
+			System.out.prinyln("---------------------1.打印三元组---------------------");
+			System.out.prinyln("---------------------2.获取最大分量-------------------");
+			System.out.prinyln("---------------------3.获取最小分量-------------------");
+			System.out.prinyln("---------------------4.修改分量-----------------------");
+			System.out.prinyln("---------------------5.销毁三元组---------------------");
+			System.out.prinyln("---------------------6.退出---------------------------");
+			int choice = sc.nextInt();
+			switch(choice)
+			{
+			case 1:
+				t.display();
+				break;
+			case 2:
+				t.getMax();
+				break;
+			case 3:
+				t.getMin;
+				break;
+			case 4:
+				t.modifyTriplet();
+				break;
+			case 5:
+				t.destroy();
+				break;
+			default:
+				System.out.prinyln("选项无效！！！");
+			}
+		}
+	}
+
+}

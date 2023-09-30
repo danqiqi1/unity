@@ -1,0 +1,51 @@
+import java.util.Scanner;
+public class Ascending
+{
+	private static Scanner sc = new Scanner(System.in);//创建Scanner方法
+	public static void main(String[] args)
+	{
+		Num obj = new Num();//创建num类的对象
+		//调用方法
+		obj.init();
+		obj.sort();
+	}
+}
+class Num
+{
+	private double[] nums;
+	//初始化方法
+	public void init()
+	{
+		nums =new double[10];//对该数组进行声明
+		System.out.println("请输入你想要进行排序的数列：");
+		for(int i = 0; i < 10; i++)
+		{
+			nums[i] = Ascending.sc.nextDouble();//使用Asscending中的Scanner对象
+		}
+	}
+	//开始定义排序方法
+public void sort()
+    {
+        double temp;
+        for(int i = 0; i < nums.length - 1; i++)
+        {
+            for(int j = 0; j < nums.length - 1 - i; j++)
+            {
+                if(nums[j] > nums[j+1])
+                {
+                    temp = nums[j];
+                    nums[j] = nums[j+1];
+                    nums[j+1] = temp;
+                }
+            }
+        }
+
+        // 显示排序后的结果
+        for(int k = 0; k < 10; k++)
+        {
+            System.out.println(nums[k]);
+        }
+    }
+}
+
+

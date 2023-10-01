@@ -1,0 +1,123 @@
+import java.util.Scanner;
+
+public class Tuple 
+{
+    private double[] elements;
+
+    public Tuple(double... values) 
+    {
+        this.elements = values.clone();
+    }
+
+    public double get(int index) 
+    {
+        return elements[index];
+    }
+
+    public void set(int index, double value) 
+    {
+        elements[index] = value;
+    }
+
+    public double getMax() 
+    {
+        double max = elements[0];
+        for (double e : elements) 
+        {
+            if (e > max) 
+            {
+                max = e;
+            }
+        }
+        return max;
+    }
+
+    public double getMin() 
+    {
+        double min = elements[0];
+        for (double e : elements) 
+        {
+            if (e < min) 
+            {
+                min = e;
+            }
+        }
+        return min;
+    }
+
+    @Override
+    public String toString() 
+    {
+        StringBuilder s = new StringBuilder("(");
+        for (int i = 0; i < elements.length; i++) 
+        {
+            s.append(elements[i]);
+            if (i < elements.length - 1) 
+            {
+                s.append(",");
+            }
+        }
+        s.append(")");
+        return s.toString();
+    }
+
+    public static void main(String[] args) 
+    {
+        Tuple t = null;
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("-------------------N元组操作菜单------------------");
+            System.out.println("-------------------1.创建N元祖--------------------");
+            System.out.println("-------------------2.替换N元组--------------------");
+            System.out.println("-------------------3.求取最大值-------------------");
+            System.out.println("-------------------4.求取最小值-------------------");
+            System.out.println("-------------------5.打印N元组--------------------");
+            System.out.println("-------------------6.退出-------------------------");
+            int choice = sc.nextInt();
+
+            // 检查除了“创建N元组”和“退出”以外的其他选择，Tuple对象是否已创建
+            if (t == null && choice >= 2 && choice <= 5) 
+            {
+                System.out.println("请先创建N元组！");
+                continue;
+            }
+
+            switch (choice) 
+            {
+                case 1:
+                    System.out.println("请输入N元组的大小（即元素数量）：");
+                    int n = sc.nextInt();
+                    double[] values = new double[n];
+                    for (int i = 0; i < n; i++) 
+                    {
+                        System.out.println("请输入第" + (i + 1) + "个值：");
+                        values[i] = sc.nextDouble();
+                    }
+                    t = new Tuple(values);
+                    break;
+                case 2:
+                    System.out.println("请输入你想要替换的索引：");
+                    int index = sc.nextInt();
+                    System.out.println("请输入新的值：");
+                    double newValue = sc.nextDouble();
+                    t.set(index, newValue);
+                    break;
+                case 3:
+                    System.out.println("最大值是：" + t.getMax());
+                    break;
+                case 4:
+                    System.out.println("最小值是：" + t.getMin());
+                    break;
+                case 5:
+                    System.out.println(t);
+                    break;
+                case 6:
+                    sc.close();
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("抱歉，您输入的选项为无效选择！");
+            }
+        }
+    }
+}

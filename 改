@@ -1,0 +1,115 @@
+import java.util.Scanner;
+
+class Tuple {
+    int n;
+    float[] x;  
+
+    Scanner sc = new Scanner(System.in);  // 修改: 将Scanner对象放在类级别
+
+    // 创建N元组
+    public void init() {
+        System.out.println("请输入你想要创建几元组:");
+        n = sc.nextInt();
+        x = new float[n];  // 修改: 将数组初始化放在读取n之后
+        System.out.println("请输入" + n + "个分量:");
+        for (int i = 0; i < n; i++) {
+            x[i] = sc.nextFloat();
+        }
+        System.out.println("N元组创建完毕");
+    }
+
+    // 显示N元组
+    public void print() {
+        System.out.println("该N元组为:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(x[i] + "\t");
+        }
+        System.out.println();  // 修改: 添加换行，使输出更整洁
+    }
+
+    // 取任意一个分量
+    public void getOne() {
+        System.out.println("请输入想要获取第几个分量：");
+        int a = sc.nextInt();
+        if (a >= 0 && a < n) {  // 修改: 检查索引是否有效
+            System.out.println(x[a]);
+        } else {
+            System.out.println("无效的索引");
+        }
+    }
+
+    // 置任意一个分量
+    public void putOne() {
+        System.out.println("请输入想要置换的第几个分量");
+        int a = sc.nextInt();
+        if (a >= 0 && a < n) {  // 修改: 检查索引是否有效
+            System.out.println("请输入你想置换的数字");
+            x[a] = sc.nextFloat();  // 修改: 实际更新数组元素
+        } else {
+            System.out.println("无效的索引");
+        }
+    }
+
+    // 求最大分量
+    public void getMax() {
+        float max = x[0];
+        for (float j : x) {  
+            if (j > max) {
+                max = j;
+            }
+        }
+        System.out.println("最大分量为: " + max);  // 修改: 显示最大值
+    }
+
+    // 求最小分量
+    public void getMin() {
+        float min = x[0];
+        for (float j : x) {
+            if (j < min) {
+                min = j;
+            }
+        }
+        System.out.println("最小分量为: " + min);  // 修改: 显示最小值
+    }
+}
+
+public class TestTuple {
+    public static void main(String[] args) {
+        Tuple tup = new Tuple();
+        int flag;
+        while (true) {
+            System.out.println("\n**N元组的基本操作**");
+            System.out.println("1、初始化N元组");
+            System.out.println("2、取任意一个分量");
+            System.out.println("3、置任意一个分量");
+            System.out.println("4、求N元组的最大分量");
+            System.out.println("5、求N元组的最小分量");
+            System.out.println("6、输出N元组");
+            System.out.println("7、退出系统");
+            System.out.println("\n请输入你想完成的功能编号&#8203;``oaicite:{"number":1,"invalid_reason":"Malformed citation 【1-7】"}``&#8203;");
+            flag = tup.sc.nextInt();  // 修改: 使用tup对象的Scanner对象
+            switch (flag) {
+                case 1:
+                    tup.init();
+                    break;
+                case 2:
+                    tup.getOne();
+                    break;
+                case 3:
+                    tup.putOne();
+                    break;
+                case 4:
+                    tup.getMax();
+                    break;
+                case 5:
+                    tup.getMin();
+                    break;
+                case 6:
+                    tup.print();
+                    break;
+                case 7:
+                    System.exit(0);
+            }
+        }
+    }
+}

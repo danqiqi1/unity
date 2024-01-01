@@ -1,0 +1,60 @@
+package nuc.ss.entity;
+
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OrderJdbc 
+{
+	//首先为了对数据库中的数据进行相关操作，我们首先需要获取数据库连接
+	/**
+	 * 
+	 * @return 返回一个数据库连接对象
+	 * @throws ClassNotFoundException 如果无法找到数据库驱动类所抛出的异常
+	 * @throws SQLException 如果连接数据库的过程中发生错误所抛出的异常
+	 */
+	private  Connection getConnection() throws ClassNotFoundException, SQLException
+	{
+		//加载数据库驱动类
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		//返回连接对象
+		return DriverManager.getConnection("jdbc:mysql://localhost:3306/Agricultural?serverTimezone=UTC", "root", "Abandon0308//");
+	}
+	//定义一个方法用于获取数据库中所有的订单对象，同时创建一个列表用于存放查询结果
+	/**
+	 * 
+	 * @return 一个包含所有订单对象的集合
+	 */
+	public List<Order> getAllOrders()
+	{
+		//常见一个集合用于存放查询结果
+		List<Order> orders = new ArrayList<>();
+		 try (Connection conn = getConnection(); // 获取数据库连接
+	             Statement stmt = conn.createStatement(); // 创建Statement对象执行查询
+	             ResultSet rs = stmt.executeQuery("SELECT * FROM orders")) { // 执行查询并获取结果集
+
+	            // 遍历结果集
+	            while (rs.next()) {
+	                // 从结果集中获取每个字段的值
+	                int orderId = rs.getInt("orderID");
+	                int buyerId = rs.getInt("buyersID");
+	                Date orderDate = rs.getDate("orderDate");
+	                int productId = rs.getInt("productld");
+	                int quantity = rs.getInt("quantity");
+	                double total = rs.getDouble("total");
+
+	                // 使用获取到的字段值创建Order对象
+	                Order order = new Order(orderId, buyerId, orderDate, productId, quantity, total);
+	                // 将Order对象添加到列表中
+	                orders.add(order);
+	            }
+	        } catch (SQLException | ClassNotFoundException e) {
+	            // 捕获异常并打印错误栈信息
+	            e.printStackTrace();
+	        }
+	        // 返回包含所有订单对象的列表
+	        return orders;
+	    
+	}
+}

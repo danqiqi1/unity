@@ -109,7 +109,7 @@ public class OrderJdbc
 		//加载数据库驱动类
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		//返回连接对象
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/Agricultural?serverTimezone=UTC", "root", "Abandon0308//");
+		return DriverManager.getConnection("jdbc:mysql://localhost:3306/Agricultural?serverTimezone=UTC", "root", "111");
 	}
 	//定义一个方法用于获取数据库中所有的订单对象，同时创建一个列表用于存放查询结果
 	/**
@@ -145,6 +145,106 @@ public class OrderJdbc
 	        }
 	        // 返回包含所有订单对象的列表
 	        return orders;
-	    
+	}
+	/**
+	 *
+	 * @param order 即要添加的订单对象
+	 * @return 返回一个布尔值用于表示操作是否成功
+	 */
+	public  boolean addOrder(Order order)
+	{
+		//SQL插入语句
+		String sql = "INSERT INTO orders (orderID, buyersID, orderDate, productId, quantity, total) VALUES (?, ?, ?, ?, ?, ?)";
+		try (Connection conn = getConnection(); // 获取数据库连接
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) 
+		{ // 创建PreparedStatement对象
+
+	            // 设置SQL语句中的参数
+	            pstmt.setInt(1, order.getOrderId());
+	            pstmt.setInt(2, order.getBuyerId());
+	            pstmt.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
+	            pstmt.setInt(4, order.getProductId());
+	            pstmt.setInt(5, order.getQuantity());
+	            pstmt.setDouble(6, order.getTotal());
+	            
+	            // 执行SQL语句并返回执行结果
+	            int result = pstmt.executeUpdate();
+	            // 如果结果为1，表示插入成功
+	            return result == 1;
+	        } catch (SQLException | ClassNotFoundException e) {
+	            e.printStackTrace();
+	        }
+	        // 如果发生异常，返回false
+	        return false;
+	}
+	/**
+	 * 
+	 * @param order 即将要删除的订单对象
+	 * @return 返回一个布尔值用于表示操作是否成功
+	 */
+	public  boolean deleteOrder(int orderId)
+	{
+		//SQL删除语句
+		String sql = "DELETE FROM orders WHERE orderID = ?";
+		
+		// 使用try-with-resources自动关闭资源
+        try (Connection conn = getConnection(); // 获取数据库连接
+             PreparedStatement pstmt = conn.prepareStatement(sql)) { // 创建PreparedStatement对象
+
+            // 设置SQL语句中的参数
+            pstmt.setInt(1, orderId);
+
+            // 执行SQL语句并返回执行结果
+            int result = pstmt.executeUpdate();
+            // 如果结果为1，表示删除成功
+            return result == 1;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 如果发生异常，返回false
+        return false;
+    }
+	/**
+	 * 按照产品ID获取订单信息
+	 * @param productId 所要进行查询的产品ID
+	 * @return 一个集合用于存放相应的订单信息
+	 */
+	public List<Order> getOrdersByProductId(int productId)
+	{
+		//创建一个Order类型的集合用于存放查询结果
+		List<Order> orders = new ArrayList<>();
+		//SQL查询语句，使用productId作为条件
+		String sql = "SELECT * FROM orders WHERE productId = ?";
+		// 使用try-with-resources自动关闭资源
+	    try (Connection conn = getConnection(); // 获取数据库连接
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) { // 创建PreparedStatement对象
+
+	        // 设置查询语句中的productId参数
+	        pstmt.setInt(1, productId);
+
+	        // 执行查询
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            // 处理结果集
+	            while (rs.next()) {
+	                // 从结果集中获取每个字段的值
+	                int orderId = rs.getInt("orderID");
+	                int buyerId = rs.getInt("buyersID");
+	                Date orderDate = rs.getDate("orderDate");
+	                int productId2 = rs.getInt("productld");
+	                int quantity = rs.getInt("quantity");
+	                double total = rs.getDouble("total");
+
+	                // 创建Order对象并设置属性
+	                Order order = new Order(orderId, buyerId, orderDate, productId2, quantity, total);
+	                // 将Order对象添加到列表中
+	                orders.add(order);
+	            }
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        // 捕获异常并打印错误栈信息
+	        e.printStackTrace();
+	    }
+	    // 返回包含所有订单对象的列表
+	    return orders;
 	}
 }

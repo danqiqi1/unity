@@ -1,0 +1,93 @@
+package nuc.ss.shopping.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SellerFrame extends JFrame {
+    private JButton addProductButton;
+    private JButton removeProductButton;
+    private JButton updateProductButton;
+    private JButton viewOrdersButton;
+    private JButton shipOrderButton;
+    private JButton manageUserInfoButton;
+    
+
+    public SellerFrame() {
+    	setTitle("卖家界面");
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null); // 窗口居中
+        
+        // 初始化组件
+        addProductButton = new JButton("上架产品");
+        removeProductButton = new JButton("下架产品");
+        updateProductButton = new JButton("更新产品信息");
+        viewOrdersButton = new JButton("查看订单");
+        shipOrderButton = new JButton("订单处理");
+        manageUserInfoButton = new JButton("用户信息管理");
+
+        // 设置布局并添加组件
+        setLayout(new FlowLayout());
+        add(addProductButton);
+        add(removeProductButton);
+        add(updateProductButton);
+        add(viewOrdersButton);
+        add(shipOrderButton);
+        add(manageUserInfoButton);
+        
+
+        // 为按钮添加事件监听器
+        addProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 上架产品逻辑
+            }
+        });
+
+        removeProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 下架产品逻辑
+            }
+        });
+
+        updateProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 更新产品信息逻辑
+            }
+        });
+
+        viewOrdersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 查看订单逻辑
+            }
+        });
+
+        shipOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 发货逻辑
+            }
+        });
+
+        manageUserInfoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 用户信息管理逻辑
+            }
+        });
+
+        // ...为其他按钮添加事件监听器...
+    }
+
+    protected void logout() {
+        // 卖家注销逻辑
+        // 关闭当前界面，并打开登录界面...
+    }
+
+    // ...实现其他方法和逻辑...
+}

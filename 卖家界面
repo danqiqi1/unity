@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class SellerFrame extends JFrame {
+	private CardLayout cardLayout = new CardLayout();
+    private JPanel productPanel, orderPanel, userInfoPanel; // 分别对应产品管理、订单管理和用户信息管理的面板
     private JComboBox<String> productManagementComboBox;
     private JComboBox<String> orderManagementComboBox;
     private JComboBox<String> userInfoManagementComboBox;
@@ -34,59 +36,143 @@ public class SellerFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
 
-        mainPanel = new JPanel(new CardLayout());
+        // 创建顶部工具栏和按钮
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+        JButton productManagementButton = new JButton("产品管理");
+        JButton orderManagementButton = new JButton("订单管理");
+        JButton userInfoManagementButton = new JButton("用户信息管理");
+        toolBar.add(productManagementButton);
+        toolBar.add(orderManagementButton);
+        toolBar.add(userInfoManagementButton);
+        add(toolBar, BorderLayout.NORTH);
 
-        // 产品管理下拉列表及其功能实现
-        String[] productFunctions = {"查看产品", "上架产品", "下架产品", "更新产品信息"};
-        productManagementComboBox = new JComboBox<>(productFunctions);
-        productManagementComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performProductManagementAction((String) productManagementComboBox.getSelectedItem());
-            }
-        });
-
-        // 订单管理下拉列表及其功能实现
-        String[] orderFunctions = {"查看订单", "处理订单", "统计销量"};
-        orderManagementComboBox = new JComboBox<>(orderFunctions);
-        orderManagementComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performOrderManagementAction((String) orderManagementComboBox.getSelectedItem());
-            }
-        });
-
-        // 用户信息管理下拉列表及其功能实现
-        String[] userInfoFunctions = {"查看用户信息", "更改用户名", "更改密码", "退出登录", "注销账号"};
-        userInfoManagementComboBox = new JComboBox<>(userInfoFunctions);
-        userInfoManagementComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                performUserInfoManagementAction((String) userInfoManagementComboBox.getSelectedItem());
-            }
-        });
-
-        // 添加下拉列表到主面板
-        JPanel productPanel = new JPanel();
-        productPanel.add(productManagementComboBox);
-        JPanel orderPanel = new JPanel();
-        orderPanel.add(orderManagementComboBox);
-        JPanel userInfoPanel = new JPanel();
-        userInfoPanel.add(userInfoManagementComboBox);
-
-        mainPanel.add(productPanel, "产品管理");
-        mainPanel.add(orderPanel, "订单管理");
-        mainPanel.add(userInfoPanel, "用户信息管理");
-
+        // 设置主面板和卡片布局
+        mainPanel = new JPanel(cardLayout);
+        initProductManagementPanel();
+        initOrderManagementPanel();
+        initUserInfoManagementPanel();
         add(mainPanel, BorderLayout.CENTER);
+
+        // 为按钮添加事件监听器，用于切换不同的面板
+        productManagementButton.addActionListener(e -> cardLayout.show(mainPanel, "产品管理"));
+        orderManagementButton.addActionListener(e -> cardLayout.show(mainPanel, "订单管理"));
+        userInfoManagementButton.addActionListener(e -> cardLayout.show(mainPanel, "用户信息管理"));
+
+        // 默认显示产品管理界面
+        cardLayout.show(mainPanel, "产品管理");
+
         setVisible(true);
     }
 
+    // 初始化产品管理面板
+    private void initProductManagementPanel() {
+        productPanel = new JPanel();
+        productPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton productManagementButton = new JButton("产品管理");
+        productManagementButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showProductManagementOptions();
+            }
+        });
+
+        productPanel.add(productManagementButton);
+        mainPanel.add(productPanel, "产品管理");
+    }
+
+
+    // 初始化订单管理面板
+    private void initOrderManagementPanel() {
+        orderPanel = new JPanel();
+        orderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton orderManagementButton = new JButton("订单管理");
+        orderManagementButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showOrderManagementOptions();
+            }
+        });
+
+        orderPanel.add(orderManagementButton);
+        mainPanel.add(orderPanel, "订单管理");
+    }
+    //初始化产品管理面板
+    private void showProductManagementOptions() {
+        String[] options = {"查看产品", "上架产品", "下架产品", "更新产品信息"};
+        String action = (String) JOptionPane.showInputDialog(
+            this,
+            "请选择操作",
+            "产品管理",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (action != null) {
+            performProductManagementAction(action);
+        }
+    }
+
+
+    // 初始化用户信息管理面板
+    private void initUserInfoManagementPanel() {
+        userInfoPanel = new JPanel();
+        userInfoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton userInfoButton = new JButton("用户信息管理");
+        userInfoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showUserInfoOptions();
+            }
+        });
+
+        userInfoPanel.add(userInfoButton);
+        mainPanel.add(userInfoPanel, "用户信息管理");
+    }
+    private void showUserInfoOptions() {
+        String[] options = {"查看用户信息", "更改用户名", "更改密码", "退出登录", "注销账号"};
+        String action = (String) JOptionPane.showInputDialog(
+            this,
+            "请选择操作",
+            "用户信息管理",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (action != null) {
+            performUserInfoManagementAction(action);
+        }
+    }
+
+    //初始化订单信息管理面板
+    private void showOrderManagementOptions() {
+        String[] options = {"查看订单", "处理订单", "统计销量"};
+        String action = (String) JOptionPane.showInputDialog(
+            this,
+            "请选择操作",
+            "订单管理",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (action != null) {
+            performOrderManagementAction(action);
+        }
+    }
     private void performProductManagementAction(String action) {
         // 移除sellerId参数，使用类成员变量userID
         switch (action) {
             case "查看产品":
-                viewProducts(userID);
+                viewProducts();
                 break;
             case "上架产品":
                 addProduct();
@@ -103,10 +189,17 @@ public class SellerFrame extends JFrame {
     }
 
     
-    private void viewProducts(int userID) {
-        // 使用userID来获取和显示产品信息
+    private void viewProducts() {
+        // 使用userID来获取产品信息
         ProductDaoImpl productDao = new ProductDaoImpl();
-        List<Product> products = productDao.getProductsBySellerId(userID);
+        List<Product> products = productDao.getProductsBySellerId(SellerFrame.this.userID);
+
+        // 确保产品列表不为空
+        if (products.isEmpty()) {
+            // 处理没有产品的情况，例如显示一个消息
+            JOptionPane.showMessageDialog(null, "没有找到产品信息。");
+            return;
+        }
 
         // 转换产品信息为表格数据
         String[] columnNames = {"产品ID", "名称", "产地", "价格", "数量", "产品类别"};
@@ -126,29 +219,28 @@ public class SellerFrame extends JFrame {
         JTable productTable = new JTable(data, columnNames);
         JScrollPane scrollPane = new JScrollPane(productTable);
 
-        // 将表格加入到界面中
-        // 这里假设您有一个用于显示表格的Panel
-        JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
-
-        // 显示或更新界面
-        mainPanel.add(tablePanel, "产品列表");
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        // 创建用于显示表格的窗口或面板
+        JFrame frame = new JFrame("产品列表");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.setSize(600, 400);
+        frame.setLocationRelativeTo(null); // 居中显示
+        frame.setVisible(true);
     }
+
 
     private void addProduct() {
         // 创建用于输入新产品信息的对话框
-        JDialog dialog = new JDialog(this, "添加产品", true);
+    	JDialog dialog = new JDialog(this, "添加产品", true);
         dialog.setLayout(new GridLayout(0, 2));
 
-        // 创建并添加标签和文本字段到对话框
         JTextField productIDField = new JTextField();
         JTextField productNameField = new JTextField();
         JTextField productPlaceField = new JTextField();
         JTextField productPriceField = new JTextField();
         JTextField productSupplyField = new JTextField();
-        JTextField productCategoryField = new JTextField(); // 添加产品类别输入字段
+        JTextField productCategoryField = new JTextField();
 
         dialog.add(new JLabel("产品ID:"));
         dialog.add(productIDField);
@@ -164,51 +256,55 @@ public class SellerFrame extends JFrame {
         dialog.add(productCategoryField);
         // 添加一个按钮来提交产品信息
         JButton submitButton = new JButton("添加");
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int productID = Integer.parseInt(productIDField.getText());
-                    String productName = productNameField.getText();
-                    String productPlace = productPlaceField.getText();
-                    double productPrice = Double.parseDouble(productPriceField.getText());
-                    int productSupply = Integer.parseInt(productSupplyField.getText());
-                    String productCategory = productCategoryField.getText(); // 获取产品类别
-                    int adminID = 501; 
-
-                    // 创建一个新的Product对象
-                    Product product = new Product();
-                    product.setProductID(productID);
-                    product.setProductname(productName);
-                    product.setProductplace(productPlace);
-                    product.setProductprice((float) productPrice);
-                    product.setProductsupply(productSupply);
-                    product.setProductcategory(productCategory); // 设置产品类别
-                    product.setAdminsID(adminID); // 设置管理员ID
-
-                    ProductDaoImpl productDao = new ProductDaoImpl();
-                    boolean isSuccess = productDao.addProduct(userID,product);
-
-                    if (isSuccess) {
-                        // 添加成功的处理逻辑
-                        JOptionPane.showMessageDialog(dialog, "产品添加成功");
-                        dialog.dispose(); // 关闭对话框
-                    } else {
-                        // 添加失败的处理逻辑
-                        JOptionPane.showMessageDialog(dialog, "产品添加失败", "错误", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialog, "输入不合法，请检查输入", "错误", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        submitButton.addActionListener(e -> processAddProduct(
+            dialog, // 将对话框传递给processAddProduct方法
+            productIDField.getText(),
+            productNameField.getText(),
+            productPlaceField.getText(),
+            productPriceField.getText(),
+            productSupplyField.getText(),
+            productCategoryField.getText()
+        ));
 
         dialog.add(submitButton);
-        dialog.pack(); // 自适应大小
+        dialog.pack();
         dialog.setVisible(true);
     }
 
+    
 
+
+    private void processAddProduct(JDialog dialog, String productID, String productName, String productPlace,String productPrice, String productSupply, String productCategory) {
+            try {
+          // 解析输入数据
+                   int productId = Integer.parseInt(productID);
+                   double price = Double.parseDouble(productPrice);
+                   int supply = Integer.parseInt(productSupply);
+
+                  // 创建产品对象并设置属性
+                   Product product = new Product();
+                   product.setProductID(productId);
+                   product.setProductname(productName);
+                   product.setProductplace(productPlace);
+                   product.setProductprice((float) price);
+                   product.setProductsupply(supply);
+                   product.setProductcategory(productCategory);
+                   product.setAdminsID(501); // 设置管理员ID为501
+                   product.setSellersID(this.userID); // 设置卖家ID
+
+                   // 调用数据库操作类来添加产品
+                   ProductDaoImpl productDao = new ProductDaoImpl();
+                   if (productDao.addProduct(this.userID, product)) {
+                       JOptionPane.showMessageDialog(this, "产品添加成功");
+                       dialog.dispose(); // 关闭对话框
+                   } else {
+                       JOptionPane.showMessageDialog(this, "产品添加失败", "错误", JOptionPane.ERROR_MESSAGE);
+                   }
+               } catch (NumberFormatException ex) {
+                   JOptionPane.showMessageDialog(this, "输入不合法，请检查输入", "错误", JOptionPane.ERROR_MESSAGE);
+               }
+
+}
 
     private void removeProduct() {
         // 创建用于输入要删除的产品ID的对话框
@@ -348,7 +444,13 @@ public class SellerFrame extends JFrame {
         ordersFrame.setLocationRelativeTo(null);
 
         // 获取所有订单对象
-        List<Order> orders = orderJdbcDao.getAllOrders();
+        List<Order> orders = null;
+		try {
+			orders = orderJdbcDao.getOrdersBySellerId(this.userID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // 创建一个表格用于显示订单信息
         String[] columnNames = {"订单ID", "买家ID", "订单日期", "产品ID", "数量", "总价"};
@@ -455,23 +557,26 @@ public class SellerFrame extends JFrame {
     }
 
     private void calculateSales() {
-    	OrderJdbcDao orderJdbcDao = new OrderJdbcDao();
-        // 创建一个窗口用于输入日期范围
+        OrderJdbcDao orderJdbcDao = new OrderJdbcDao();
+        // 创建一个窗口用于输入日期范围和产品ID
         JFrame dateRangeFrame = new JFrame("输入日期范围");
         dateRangeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dateRangeFrame.setSize(400, 200);
+        dateRangeFrame.setSize(400, 250);
         dateRangeFrame.setLocationRelativeTo(null);
 
-        // 创建文本字段和按钮用于输入起始日期和结束日期
+        // 创建文本字段和按钮
         JTextField startDateField = new JTextField(10);
         JTextField endDateField = new JTextField(10);
+        JTextField productIdField = new JTextField(10);
         JButton calculateButton = new JButton("计算销量");
 
-        JPanel inputPanel = new JPanel();
+        JPanel inputPanel = new JPanel(new GridLayout(0, 2));
         inputPanel.add(new JLabel("开始日期: "));
         inputPanel.add(startDateField);
         inputPanel.add(new JLabel("结束日期: "));
         inputPanel.add(endDateField);
+        inputPanel.add(new JLabel("产品ID: "));
+        inputPanel.add(productIdField);
         inputPanel.add(calculateButton);
 
         dateRangeFrame.add(inputPanel);
@@ -481,28 +586,72 @@ public class SellerFrame extends JFrame {
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 获取用户输入的起始日期和结束日期
-                String startDateStr = startDateField.getText();
-                String endDateStr = endDateField.getText();
-
-                // 解析日期字符串为Date对象
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 try {
-                    Date startDate = (Date) dateFormat.parse(startDateStr);
-                    Date endDate = (Date) dateFormat.parse(endDateStr);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    java.util.Date startDateUtil = dateFormat.parse(startDateField.getText());
+                    java.util.Date endDateUtil = dateFormat.parse(endDateField.getText());
+                    java.sql.Date startDate = new java.sql.Date(startDateUtil.getTime());
+                    java.sql.Date endDate = new java.sql.Date(endDateUtil.getTime());
+                    int productID = Integer.parseInt(productIdField.getText());
 
-                    // 假设您要按照产品ID统计销量，您可以调用您的DAO方法
-                    int productID = 123; // 替换为您要统计的产品ID
+                    // 获取销量和订单记录
                     int sales = orderJdbcDao.getSales(productID, startDate, endDate);
+                    List<Order> orders = null;
+					try {
+						orders = orderJdbcDao.getOrdersByProductIdAndDateRange(productID, startDate, endDate);
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
-                    // 显示销量统计结果
-                    JOptionPane.showMessageDialog(dateRangeFrame, "销量统计结果为：" + sales);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(dateRangeFrame, "日期格式错误，请使用yyyy-MM-dd格式。");
+                    // 关闭输入窗口
+                    dateRangeFrame.dispose();
+
+                    // 显示销量和订单记录
+                    showSalesAndOrders(sales, orders);
+
+                } catch (ParseException | NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dateRangeFrame, "输入格式错误，请检查输入", "错误", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
     }
+
+    private void showSalesAndOrders(int sales, List<Order> orders) {
+        // 创建一个新窗口用于显示销量和订单记录
+        JFrame resultFrame = new JFrame("销量和订单记录");
+        resultFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        resultFrame.setSize(600, 400);
+        resultFrame.setLocationRelativeTo(null);
+
+        // 显示销量
+        JPanel salesPanel = new JPanel();
+        salesPanel.add(new JLabel("总销量: " + sales));
+        resultFrame.add(salesPanel, BorderLayout.NORTH);
+
+        // 创建表格显示订单记录
+        String[] columnNames = {"订单ID", "买家ID", "订单日期", "产品ID", "数量", "总价"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        for (Order order : orders) {
+            tableModel.addRow(new Object[]{
+                order.getOrderId(), 
+                order.getBuyerId(), 
+                order.getOrderDate(), 
+                order.getProductId(), 
+                order.getQuantity(), 
+                order.getTotal()
+            });
+        }
+
+        JTable orderTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(orderTable);
+        resultFrame.add(scrollPane, BorderLayout.CENTER);
+
+        // 显示结果窗口
+        resultFrame.setVisible(true);
+    }
+
+
 
 
     
@@ -510,28 +659,26 @@ public class SellerFrame extends JFrame {
     private void performUserInfoManagementAction(String action) {
         switch (action) {
             case "查看用户信息":
-                viewUserInfo(userID);
+                viewUserInfo();
                 break;
             case "更改用户名":
-                changeUsername(userID);
+                changeUsername();
                 break;
             case "更改密码":
-                changePassword(userID);
+                changePassword();
                 break;
             case "退出登录":
                 logout();
                 break;
             case "注销账号":
-                deactivateAccount(userID);
+                deactivateAccount();
                 break;
             default:
                 break;
         }
     }
 
-    private void deactivateAccount(int userID) {
-        SellerImpl sellerImpl = new SellerImpl();
-
+    private void deactivateAccount() {
         // 创建一个确认窗口
         JFrame confirmDeactivationFrame = new JFrame("注销账号");
         confirmDeactivationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -555,15 +702,7 @@ public class SellerFrame extends JFrame {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 调用注销账号的方法
-                boolean isAccountDeactivated = sellerImpl.deleteSeller(userID);
-
-                if (isAccountDeactivated) {
-                    JOptionPane.showMessageDialog(confirmDeactivationFrame, "账号已成功注销");
-                    confirmDeactivationFrame.dispose(); // 关闭窗口
-                } else {
-                    JOptionPane.showMessageDialog(confirmDeactivationFrame, "账号注销失败", "错误", JOptionPane.ERROR_MESSAGE);
-                }
+                performAccountDeactivation(confirmDeactivationFrame);
             }
         });
 
@@ -574,6 +713,19 @@ public class SellerFrame extends JFrame {
                 confirmDeactivationFrame.dispose(); // 关闭窗口
             }
         });
+    }
+
+    private void performAccountDeactivation(JFrame confirmDeactivationFrame) {
+        SellerImpl sellerImpl = new SellerImpl();
+        // 调用注销账号的方法
+        boolean isAccountDeactivated = sellerImpl.deleteSeller(SellerFrame.this.userID);
+
+        if (isAccountDeactivated) {
+            JOptionPane.showMessageDialog(confirmDeactivationFrame, "账号已成功注销");
+            confirmDeactivationFrame.dispose(); // 关闭窗口
+        } else {
+            JOptionPane.showMessageDialog(confirmDeactivationFrame, "账号注销失败", "错误", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
@@ -590,9 +742,7 @@ public class SellerFrame extends JFrame {
 	}
 
 
-	private void changePassword(int userID) {
-		SellerImpl sellerImpl = new SellerImpl();
-
+	private void changePassword() {
 	    // 创建一个窗口用于输入新密码
 	    JFrame changePasswordFrame = new JFrame("更改密码");
 	    changePasswordFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -615,28 +765,30 @@ public class SellerFrame extends JFrame {
 	    changeButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            // 获取用户输入的新密码
-	            char[] newPasswordChars = newPasswordField.getPassword();
-	            String newPassword = new String(newPasswordChars);
-
-	            
-	            
-	            boolean isPasswordChanged = sellerImpl.updateSellerPassword(userID, newPassword);
-
-	            if (isPasswordChanged) {
-	                JOptionPane.showMessageDialog(changePasswordFrame, "密码已成功更改");
-	                changePasswordFrame.dispose(); // 关闭窗口
-	            } else {
-	                JOptionPane.showMessageDialog(changePasswordFrame, "密码更改失败", "错误", JOptionPane.ERROR_MESSAGE);
-	            }
+	            performPasswordChange(changePasswordFrame, newPasswordField);
 	        }
 	    });
 	}
 
+	private void performPasswordChange(JFrame changePasswordFrame, JPasswordField newPasswordField) {
+	    SellerImpl sellerImpl = new SellerImpl();
+	    // 获取用户输入的新密码
+	    char[] newPasswordChars = newPasswordField.getPassword();
+	    String newPassword = new String(newPasswordChars);
 
-	private void changeUsername(int userId) {
-		SellerImpl sellerImpl = new SellerImpl();
+	    boolean isPasswordChanged = sellerImpl.updateSellerPassword(this.userID, newPassword);
 
+	    if (isPasswordChanged) {
+	        JOptionPane.showMessageDialog(changePasswordFrame, "密码已成功更改");
+	        changePasswordFrame.dispose(); // 关闭窗口
+	    } else {
+	        JOptionPane.showMessageDialog(changePasswordFrame, "密码更改失败", "错误", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+
+
+	private void changeUsername() {
 	    // 创建一个窗口用于更改用户名
 	    JFrame changeUsernameFrame = new JFrame("更改用户名");
 	    changeUsernameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -659,24 +811,30 @@ public class SellerFrame extends JFrame {
 	    changeButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            // 获取用户输入的新用户名
-	            String newUsername = newUsernameField.getText();
-
-	            // 调用方法来更改用户名
-	            boolean isSuccess = sellerImpl.updateSellerName(userId, newUsername);
-
-	            if (isSuccess) {
-	                JOptionPane.showMessageDialog(changeUsernameFrame, "用户名更改成功");
-	                changeUsernameFrame.dispose(); // 关闭窗口
-	            } else {
-	                JOptionPane.showMessageDialog(changeUsernameFrame, "用户名更改失败", "错误", JOptionPane.ERROR_MESSAGE);
-	            }
+	            performUsernameChange(changeUsernameFrame, newUsernameField);
 	        }
 	    });
 	}
 
+	private void performUsernameChange(JFrame changeUsernameFrame, JTextField newUsernameField) {
+	    SellerImpl sellerImpl = new SellerImpl();
+	    // 获取用户输入的新用户名
+	    String newUsername = newUsernameField.getText();
 
-	private void viewUserInfo(int userId) {
+	    // 调用方法来更改用户名
+	    boolean isSuccess = sellerImpl.updateSellerName(this.userID, newUsername);
+
+	    if (isSuccess) {
+	        JOptionPane.showMessageDialog(changeUsernameFrame, "用户名更改成功");
+	        changeUsernameFrame.dispose(); // 关闭窗口
+	    } else {
+	        JOptionPane.showMessageDialog(changeUsernameFrame, "用户名更改失败", "错误", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+
+
+	private void viewUserInfo() {
 	    SellerImpl sellerImpl = new SellerImpl();
 
 	    // 创建一个窗口用于显示用户信息
@@ -686,7 +844,7 @@ public class SellerFrame extends JFrame {
 	    userInfoFrame.setLocationRelativeTo(null);
 
 	    // 获取用户对象
-	    User user = sellerImpl.getSellerById(userId);
+	    User user = sellerImpl.getSellerById(this.userID);
 
 	    // 创建一个表格用于显示用户信息
 	    String[] columnNames = {"用户ID", "用户名", "密码", "IP地址"};
